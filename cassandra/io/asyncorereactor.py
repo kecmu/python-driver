@@ -321,7 +321,6 @@ class AsyncoreConnection(Connection, asyncore.dispatcher):
             if self.is_closed:
                 return
             self.is_closed = True
-
         log.debug("Closing connection (%s) to %s", id(self), self.host)
         self._writable = False
         self._readable = False
@@ -344,6 +343,7 @@ class AsyncoreConnection(Connection, asyncore.dispatcher):
 
     def handle_close(self):
         log.debug("Connection %s closed by server", self)
+        import traceback; traceback.print_stack()
         self.close()
 
     def handle_write(self):
