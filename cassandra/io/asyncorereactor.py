@@ -30,7 +30,7 @@ try:
 except ImportError:
     from cassandra.util import WeakSet  # noqa
 
-import asyncore
+import cassandra.io.asyncore as asyncore
 
 try:
     import ssl
