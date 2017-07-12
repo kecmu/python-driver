@@ -317,6 +317,7 @@ class AsyncoreConnection(Connection, asyncore.dispatcher):
         self._loop.maybe_start()
 
     def close(self):
+        log.debug("Beginning to close connection (%s) to %s", id(self), self.host)
         with self.lock:
             if self.is_closed:
                 return
@@ -339,6 +340,7 @@ class AsyncoreConnection(Connection, asyncore.dispatcher):
             self.connected_event.set()
 
     def handle_error(self):
+        log.debug("handle_error")
         self.defunct(sys.exc_info()[1])
 
     def handle_close(self):
@@ -412,3 +414,35 @@ class AsyncoreConnection(Connection, asyncore.dispatcher):
 
     def readable(self):
         return self._readable or (self.is_control_connection and not (self.is_defunct or self.is_closed))
+
+    def del_channel(self, map=None):
+        log.debug("Closing channel")
+        fd = self._fileno
+        if map is None:
+            map = self._map
+        if fd in map:
+            #self.log_info('closing channel %d:%s' % (fd, self))
+            del map[fd]
+        self._fileno = None
+
+
+    def handle_accepted(self, sock, addr):
+        log.debug("handle_accepted")
+        sock.close()
+
+
+    def handle_expt_event(self):
+        log.debug("handle_expt_event")
+        # handle_expt_event() is called if there might be an error on the
+        # socket, or if there is OOB data
+        # check for the error condition first
+        err = self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
+        if err != 0:
+            # we can get here when select.select() says that there is an
+            # exceptional condition on the socket
+            # since there is an error, we'll go ahead and close the socket
+            # like we would in a subclassed handle_read() that received no
+            # data
+            self.handle_close()
+        else:
+            self.handle_expt()
