@@ -45,12 +45,12 @@ def main():
     session.execute("CREATE TABLE IF NOT EXISTS test_table (thekey text PRIMARY KEY, col1 text, col2 text);")
 
     query = SimpleStatement("""
-        INSERT INTO mytable (thekey, col1, col2)
+        INSERT INTO test_table (thekey, col1, col2)
         VALUES (%(key)s, %(a)s, %(b)s)
         """)
 
     prepared = session.prepare("""
-        INSERT INTO mytable (thekey, col1, col2)
+        INSERT INTO test_table (thekey, col1, col2)
         VALUES (?, ?, ?)
         """)
 
