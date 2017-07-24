@@ -1016,6 +1016,7 @@ class _ProtocolHandler(object):
             flags |= USE_BETA_FLAG
 
         buff = io.BytesIO()
+
         cls._write_header(buff, protocol_version, flags, stream_id, msg.opcode, len(body))
         buff.write(body)
 
@@ -1027,6 +1028,7 @@ class _ProtocolHandler(object):
         Write a CQL protocol frame header.
         """
         pack = v3_header_pack if version >= 3 else header_pack
+        write_byte(f, 0xa5)
         f.write(pack(version, flags, stream_id, opcode))
         write_int(f, length)
 
