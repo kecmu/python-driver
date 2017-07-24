@@ -44,20 +44,20 @@ def main():
     log.info("creating table...")
     session.execute("CREATE TABLE IF NOT EXISTS test_table (thekey text PRIMARY KEY, col1 text, col2 text);")
 
-    query = SimpleStatement("""
-        INSERT INTO test_table (thekey, col1, col2)
-        VALUES (%(key)s, %(a)s, %(b)s)
-        """)
+    # query = SimpleStatement("""
+    #     INSERT INTO test_table (thekey, col1, col2)
+    #     VALUES (%(key)s, %(a)s, %(b)s)
+    #     """)
 
     prepared = session.prepare("""
         INSERT INTO test_table (thekey, col1, col2)
         VALUES (?, ?, ?)
         """)
 
-    for i in range(1):
+    for i in range(5):
         log.info("inserting row %d" % i)
-        session.execute(query, dict(key="key%d" % i, a='a', b='b'))
-        session.execute(prepared, ("key%d" % i, 'c', 'c'))
+        # session.execute(query, dict(key="key%d" % i, a='a', b='b'))
+        session.execute(prepared, ("key%d" % i, 'd', 'd'))
 
     future = session.execute_async("SELECT * FROM test_table")
     log.info("key\tcol1\tcol2")
