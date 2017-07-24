@@ -72,7 +72,7 @@ def main():
     for row in rows:
         log.info('\t'.join(row))
 
-    session.execute("DROP KEYSPACE " + KEYSPACE)
+    # session.execute("DROP KEYSPACE " + KEYSPACE)
 
 if __name__ == "__main__":
     main()
