@@ -22,47 +22,39 @@ handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s"))
 log.addHandler(handler)
 
-from cassandra import ConsistencyLevel
 from cassandra.cluster import Cluster
 from cassandra.query import SimpleStatement
 
-KEYSPACE = "testkeyspace"
+KEYSPACE = "key_space0"
 
 
 def main():
     cluster = Cluster(['127.0.0.1'])
     session = cluster.connect()
 
-    log.info("creating keyspace...")
+    log.info("creating key space...")
     session.execute("""
         CREATE KEYSPACE IF NOT EXISTS %s
-        WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '2' }
+        WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '1' }
         """ % KEYSPACE)
 
     log.info("setting keyspace...")
     session.set_keyspace(KEYSPACE)
 
     log.info("creating table...")
-    session.execute("""
-        CREATE TABLE IF NOT EXISTS mytable (
-            thekey text,
-            col1 text,
-            col2 text,
-            PRIMARY KEY (thekey, col1)
-        )
-        """)
+    session.execute("CREATE TABLE IF NOT EXISTS test_table (name thekey PRIMARY KEY, col1 text, col2 text);")
 
     query = SimpleStatement("""
         INSERT INTO mytable (thekey, col1, col2)
         VALUES (%(key)s, %(a)s, %(b)s)
-        """, consistency_level=ConsistencyLevel.ONE)
+        """)
 
     prepared = session.prepare("""
         INSERT INTO mytable (thekey, col1, col2)
         VALUES (?, ?, ?)
         """)
 
-    for i in range(10):
+    for i in range(5):
         log.info("inserting row %d" % i)
         session.execute(query, dict(key="key%d" % i, a='a', b='b'))
         session.execute(prepared, ("key%d" % i, 'b', 'b'))
