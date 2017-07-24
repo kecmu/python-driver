@@ -42,7 +42,7 @@ def main():
     session.set_keyspace(KEYSPACE)
 
     log.info("creating table...")
-    session.execute("CREATE TABLE IF NOT EXISTS test_table (name thekey PRIMARY KEY, col1 text, col2 text);")
+    session.execute("CREATE TABLE IF NOT EXISTS test_table (thekey text PRIMARY KEY, col1 text, col2 text);")
 
     query = SimpleStatement("""
         INSERT INTO mytable (thekey, col1, col2)
