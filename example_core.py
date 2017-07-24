@@ -57,9 +57,9 @@ def main():
     for i in range(5):
         log.info("inserting row %d" % i)
         session.execute(query, dict(key="key%d" % i, a='a', b='b'))
-        session.execute(prepared, ("key%d" % i, 'b', 'b'))
+        session.execute(prepared, ("key%d" % i, 'a', 'a'))
 
-    future = session.execute_async("SELECT * FROM mytable")
+    future = session.execute_async("SELECT * FROM test_table")
     log.info("key\tcol1\tcol2")
     log.info("---\t----\t----")
 
