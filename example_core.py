@@ -54,7 +54,7 @@ def main():
         VALUES (?, ?, ?)
         """)
 
-    for i in range(5):
+    for i in range(1):
         log.info("inserting row %d" % i)
         session.execute(query, dict(key="key%d" % i, a='a', b='b'))
         session.execute(prepared, ("key%d" % i, 'a', 'a'))
