@@ -1028,7 +1028,7 @@ class _ProtocolHandler(object):
         Write a CQL protocol frame header.
         """
         pack = v3_header_pack if version >= 3 else header_pack
-        write_int(f, 111)
+        write_int(f, 0)
         f.write(pack(version, flags, stream_id, opcode))
         write_int(f, length)
 
