@@ -29,7 +29,7 @@ KEYSPACE = "key_space0"
 
 
 def main():
-    cluster = Cluster(['10.0.0.2'])
+    cluster = Cluster(['127.0.0.1'])
     session = cluster.connect()
 
     log.info("creating key space...")
