@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import logging
+import sys
 
 log = logging.getLogger()
 log.setLevel('DEBUG')
@@ -29,6 +30,10 @@ KEYSPACE = "key_space0"
 
 
 def main():
+    if len(sys.argv) != 2:
+        print("usage: python example_core.py num_operations")
+        exit(1)
+    num_operations = int(sys.argv[1])
     cluster = Cluster(['10.0.0.2'])
     session = cluster.connect()
 
@@ -54,7 +59,7 @@ def main():
         VALUES (?, ?, ?)
         """)
 
-    for i in range(5):
+    for i in range(num_operations):
         log.info("inserting row %d" % i)
         # session.execute(query, dict(key="key%d" % i, a='a', b='b'))
         session.execute(prepared, ("key%d" % i, 'e', 'e'))
