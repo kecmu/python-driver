@@ -37,12 +37,6 @@ def main():
     cluster = Cluster(['10.0.0.2'])
     session = cluster.connect()
 
-    log.info("creating key space...")
-    session.execute("""
-        CREATE KEYSPACE IF NOT EXISTS %s
-        WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '1' }
-        """ % KEYSPACE)
-
     log.info("setting keyspace...")
     session.set_keyspace(KEYSPACE)
 
