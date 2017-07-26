@@ -58,7 +58,9 @@ def main():
     #     INSERT INTO test_table (thekey, col1, col2)
     #     VALUES (?, ?, ?)
     #     """)
-    session.execute(query, dict(key="keya", a='aa', b='bb'))
+    session.execute(query, dict(key="keya", a='cc', b='dd'))
+
+    session.execute("DELETE FROM test_table where thekey = 'keya';")
     # for i in range(num_operations):
     #     log.info("inserting row %d" % i)
     #     session.execute(prepared, ("key%d" % i, 'e', 'e'))
