@@ -67,15 +67,9 @@ def main():
     #     session.execute(prepared, ("key%d" % i, 'e', 'e'))
     session.execute(query, dict(key="keyb", a='ee', b='ff'))
 
-    future = session.execute_async("SELECT * FROM test_table")
+    rows = session.execute("SELECT * FROM test_table")
     log.info("key\tcol1\tcol2")
     log.info("---\t----\t----")
-
-    try:
-        rows = future.result()
-    except Exception:
-        log.exception("Error reading rows:")
-        return
 
     for row in rows:
         log.info('\t'.join(row))
