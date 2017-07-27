@@ -26,7 +26,7 @@ log.addHandler(handler)
 from cassandra.cluster import Cluster
 from cassandra.query import SimpleStatement
 
-KEYSPACE = "key_space0"
+KEYSPACE = "key_space1"
 
 
 def main():
