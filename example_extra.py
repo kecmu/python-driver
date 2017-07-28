@@ -61,7 +61,7 @@ def main():
     session.execute(query, dict(key="keya", a='aa', b='bb'))
 
     # session.execute("DELETE FROM test_table where thekey = 'keya';")
-    session.execute(query, dict(key="keyc", a='cc', b='dd'))
+    session.execute(query, dict(key="keya", a='cc', b='dd'))
     # for i in range(num_operations):
     #     log.info("inserting row %d" % i)
     #     session.execute(prepared, ("key%d" % i, 'e', 'e'))
