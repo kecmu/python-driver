@@ -547,14 +547,14 @@ class Connection(object):
         buf = self._iobuf.getvalue()
         pos = len(buf)
         if pos:
-            version = int_from_buf_item(buf[0]) & PROTOCOL_VERSION_MASK
+            version = int_from_buf_item(buf[4]) & PROTOCOL_VERSION_MASK
             if version > ProtocolVersion.MAX_SUPPORTED:
                 raise ProtocolError("This version of the driver does not support protocol version %d" % version)
             frame_header = frame_header_v3 if version >= 3 else frame_header_v1_v2
             # this frame header struct is everything after the version byte
-            header_size = frame_header.size + 1
+            header_size = frame_header.size + 5
             if pos >= header_size:
-                flags, stream, op, body_len = frame_header.unpack_from(buf, 1)
+                flags, stream, op, body_len = frame_header.unpack_from(buf, 5)
                 if body_len < 0:
                     raise ProtocolError("Received negative body length: %r" % body_len)
                 self._current_frame = _Frame(version, flags, stream, op, header_size, body_len + header_size)
