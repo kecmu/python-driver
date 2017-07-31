@@ -58,14 +58,14 @@ def main():
     #     INSERT INTO test_table (thekey, col1, col2)
     #     VALUES (?, ?, ?)
     #     """)
-    session.execute(query, dict(key="keya", a='aa', b='bb'))
+    session.execute("insert into key_space1.test_table (thekey, col1, col2) values ('keya', 'aa', 'bb')")
 
     # session.execute("DELETE FROM test_table where thekey = 'keya';")
-    session.execute(query, dict(key="keya", a='cc', b='dd'))
+    session.execute("insert into key_space1.test_table (thekey, col1, col2) values ('keya', 'cc', 'dd')")
     # for i in range(num_operations):
     #     log.info("inserting row %d" % i)
     #     session.execute(prepared, ("key%d" % i, 'e', 'e'))
-    session.execute(query, dict(key="keyb", a='ee', b='ff'))
+    session.execute("insert into key_space1.test_table (thekey, col1, col2) values ('keyb', 'ee', 'ff')")
 
     rows = session.execute("SELECT * FROM test_table")
     log.info("key\tcol1\tcol2")
