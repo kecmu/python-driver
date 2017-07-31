@@ -219,12 +219,6 @@ class QueryHandler(socketserver.BaseRequestHandler):
                 while exist_flag is False:
                     self.server.corfu_lock.acquire()
                     if self.server.log[query_slot] is not None:
-                        exist_flag = True
-                        query = SimpleStatement("""
-                                INSERT INTO test_table (thekey, col1, col2)
-                                VALUES (%(key)s, %(a)s, %(b)s)
-                                """)
-                        self.server.session.execute(query, dict(key="keya", a='aa', b='bb'))
                         self.request.send(self.server.log[query_slot])
                     self.server.corfu_lock.release()
                     # give the record thread 1-second chance to fill the missing slot before retry
