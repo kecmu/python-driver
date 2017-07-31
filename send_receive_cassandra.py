@@ -222,6 +222,7 @@ class QueryHandler(socketserver.BaseRequestHandler):
                         self.server.corfu_lock.acquire()
                         if self.server.log[query_slot] is not None:
                             self.request.send(self.server.log[query_slot])
+                            print("response for %s is sent." % query_slot)
                             exist_flag = True
                         self.server.corfu_lock.release()
                         # give the record thread 1-second chance to fill the missing slot before retry
