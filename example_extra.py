@@ -30,10 +30,11 @@ KEYSPACE = "key_space1"
 
 
 def main():
-    if len(sys.argv) != 2:
-        print("usage: python example_core.py num_operations")
+    if len(sys.argv) != 4:
+        print("usage: python example_core.py add/del num_operations name")
         exit(1)
-    num_operations = int(sys.argv[1])
+    num_operations = int(sys.argv[2])
+    key_name = sys.argv[3]
     cluster = Cluster(['10.0.0.2'])
     session = cluster.connect()
 
@@ -49,23 +50,33 @@ def main():
     log.info("creating table...")
     session.execute("CREATE TABLE IF NOT EXISTS test_table (thekey text PRIMARY KEY, col1 text, col2 text);")
 
-    query = SimpleStatement("""
-        INSERT INTO test_table (thekey, col1, col2)
-        VALUES (%(key)s, %(a)s, %(b)s)
-        """)
+    # query = SimpleStatement("""
+    #     INSERT INTO test_table (thekey, col1, col2)
+    #     VALUES (%(key)s, %(a)s, %(b)s)
+    #     """)
 
     # prepared = session.prepare("""
     #     INSERT INTO test_table (thekey, col1, col2)
     #     VALUES (?, ?, ?)
     #     """)
-    session.execute("insert into key_space1.test_table (thekey, col1, col2) values ('keya', 'aa', 'bb')")
+    # session.execute("insert into key_space1.test_table (thekey, col1, col2) values ('keya', 'aa', 'bb')")
 
     # session.execute("DELETE FROM test_table where thekey = 'keya';")
-    session.execute("insert into key_space1.test_table (thekey, col1, col2) values ('keya', 'cc', 'dd')")
+    # session.execute("insert into key_space1.test_table (thekey, col1, col2) values ('keya', 'cc', 'dd')")
     # for i in range(num_operations):
     #     log.info("inserting row %d" % i)
     #     session.execute(prepared, ("key%d" % i, 'e', 'e'))
-    session.execute("insert into key_space1.test_table (thekey, col1, col2) values ('keyb', 'ee', 'ff')")
+    # session.execute("insert into key_space1.test_table (thekey, col1, col2) values ('keyb', 'ee', 'ff')")
+    if sys.argv[1] == "add":
+        for i in range(num_operations):
+            query = "insert into key_space1.test_table (thekey, col1, col2) values ('key_%s%s', 'aa', 'bb')" % (key_name, i)
+            session.execute(query)
+    elif sys.argv[1] == "del":
+        for i in range(num_operations):
+            query = "delete from key_space1.test_table where thekey = 'key_%s%s')" % (key_name, i)
+            session.execute(query)
+    else:
+        print("opcode %s is wrong." % sys.argv[1])
 
     rows = session.execute("SELECT * FROM test_table")
     log.info("key\tcol1\tcol2")
