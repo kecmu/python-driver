@@ -73,7 +73,7 @@ def main():
             session.execute(query)
     elif sys.argv[1] == "del":
         for i in range(num_operations):
-            query = "delete from key_space1.test_table where thekey = 'key_%s%s')" % (key_name, i)
+            query = "delete from key_space1.test_table where thekey = 'key_%s%s'" % (key_name, i)
             session.execute(query)
     else:
         print("opcode %s is wrong." % sys.argv[1])
