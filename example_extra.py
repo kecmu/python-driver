@@ -30,12 +30,12 @@ KEYSPACE = "key_space1"
 
 
 def main():
-    if len(sys.argv) != 4:
-        print("usage: python example_core.py add/del num_operations name")
+    if len(sys.argv) != 5:
+        print("usage: python example_core.py add/del num_operations name host")
         exit(1)
     num_operations = int(sys.argv[2])
     key_name = sys.argv[3]
-    cluster = Cluster(['10.0.0.2'])
+    cluster = Cluster([sys.argv[4]])
     session = cluster.connect()
 
     log.info("creating key space...")
