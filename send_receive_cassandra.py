@@ -208,24 +208,25 @@ class QueryHandler(socketserver.BaseRequestHandler):
             if not data:
                 print('client closing')
                 return
-            query_header = unpack('!ii', data[0:8])
+            query_header = unpack('!iii', data[0:12])
             query_type = query_header[0]
-            query_slot = query_header[1]
-            print("%sth slot is queried! type: %s " % (query_slot, query_type))
+            query_slot_start = query_header[1]
+            # query_slot_end points to the index of the next slot of the last missing log
+            query_slot_end = query_header[2]
+            print("%s ~ %s slots are queried. " % (query_slot_start, query_slot_end - 1))
             if query_type == 1:
-                # print the current log list
                 # block until the queried slot is not None
-                exist_flag = False
-                while exist_flag is False:
-                    self.server.corfu_lock.acquire()
-                    if self.server.log[query_slot] is not None:
-                        self.request.send(self.server.log[query_slot])
-                        exist_flag = True
-                    self.server.corfu_lock.release()
-                    # give the record thread 1-second chance to fill the missing slot before retry
-                    if exist_flag is False:
-                        time.sleep(1)
-
+                for query_slot in range(query_slot_start, query_slot_end):
+                    exist_flag = False
+                    while exist_flag is False:
+                        self.server.corfu_lock.acquire()
+                        if self.server.log[query_slot] is not None:
+                            self.request.send(self.server.log[query_slot])
+                            exist_flag = True
+                        self.server.corfu_lock.release()
+                        # give the record thread 1-second chance to fill the missing slot before retry
+                        if exist_flag is False:
+                            time.sleep(1)
 
 class QueryServer(threading.Thread):
     def __init__(self, shared_log, shared_lock):
