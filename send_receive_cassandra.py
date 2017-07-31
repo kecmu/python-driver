@@ -242,13 +242,6 @@ class QueryServer(threading.Thread):
             self.server = ThreadedTCPServer(('', 2191), QueryHandler)
             self.server.log = self.log
             self.server.corfu_lock = self.corfu_lock
-            self.server.cluster = Cluster(['10.0.0.2'])
-            self.server.session = self.server.cluster.connect()
-            self.server.session.execute("""
-                    CREATE KEYSPACE IF NOT EXISTS %s
-                    WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '1' }
-                    """ % KEYSPACE)
-            self.server.session.set_keyspace(KEYSPACE)
             self.server.serve_forever()
 
 
