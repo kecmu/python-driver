@@ -138,7 +138,7 @@ class Record(threading.Thread):
                         sid, offset = read_number(data, 0)
                         header_skip, offset = read_number(data, offset)
                         opcode, offset = read_bool(data, offset)
-                        print("sid: %s, opcode: %s" % (sid, opcode))
+                        # print("sid: %s, opcode: %s" % (sid, opcode))
                         self.corfu_lock.acquire()
                         if len(self.log) <= sid:
                             self.log.extend([None for _ in range(len(self.log))])
@@ -213,7 +213,7 @@ class QueryHandler(socketserver.BaseRequestHandler):
             query_slot_start = query_header[1]
             # query_slot_end points to the index of the next slot of the last missing log
             query_slot_end = query_header[2]
-            print("%s ~ %s slots are queried. " % (query_slot_start, query_slot_end - 1))
+            # print("%s ~ %s slots are queried. " % (query_slot_start, query_slot_end - 1))
             if query_type == 1:
                 # block until the queried slot is not None
                 for query_slot in range(query_slot_start, query_slot_end):
@@ -222,7 +222,7 @@ class QueryHandler(socketserver.BaseRequestHandler):
                         self.server.corfu_lock.acquire()
                         if self.server.log[query_slot] is not None:
                             self.request.send(self.server.log[query_slot])
-                            print("response for %s is sent." % query_slot)
+                            # print("response for %s is sent." % query_slot)
                             exist_flag = True
                         self.server.corfu_lock.release()
                         # give the record thread 1-second chance to fill the missing slot before retry
